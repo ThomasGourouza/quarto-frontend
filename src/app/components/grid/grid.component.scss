@@ -1,0 +1,60 @@
+.margin {
+    margin-top: 75px;
+}
+.container {
+    margin: auto;
+    height: 800px;
+    width: 800px;
+    background-color: rgb(43, 43, 43);
+    border: solid 10px;
+    border-color: rgb(78, 57, 29);
+    border-radius: 10%;
+}
+.circle {
+    margin: auto;
+    height: 750px;
+    width: 750px;
+    border-radius: 50%;
+    border: solid 6px;
+    border-color: rgb(153, 111, 57);
+}
+.board {
+    display: grid;
+    grid-template-columns: 120px 120px 120px 120px;
+    grid-template-rows: 120px 120px 120px 120px;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+}
+.parent {
+    position: relative;
+}
+.child_of_circle {
+    position: absolute;
+    top: 120px;
+    left: 120px;
+}
+.child_of_container {
+    top: 20px;
+}
+.square {
+    border: 4px solid;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.square-color {
+    border-color: rgb(153, 111, 57);
+}
+.square:hover {
+    background-color: rgb(58, 58, 58);
+}
+.win {
+    animation: blinkingWin 0.5s linear infinite;
+}
+@keyframes blinkingWin {
+    0%   { border-color: rgb(153, 111, 57); }
+    50%  { border-color: rgb(34, 230, 8);   }
+    100% { border-color: rgb(153, 111, 57); }
+}

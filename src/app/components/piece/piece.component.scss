@@ -1,0 +1,61 @@
+.general {
+    border: 3px solid;
+    border-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.square {
+    border-radius: 25%;
+}
+.round {
+    border-radius: 50%;
+}
+.big-round {
+    height: 95px;
+    width: 95px;
+}
+.big-square {
+    height: 85px;
+    width: 85px;
+}
+.small-round {
+    height: 65px;
+    width: 65px;
+}
+.small-square {
+    height: 55px;
+    width: 55px;
+}
+.white {
+    background-color: rgb(218, 149, 45);
+}
+.white:hover {
+    background-color: rgb(252, 170, 48);
+}
+.black {
+    background-color: rgb(90, 55, 2);
+}
+.black:hover {
+    background-color: rgb(102, 62, 2);
+}
+.hole {
+    border-radius: 50%;
+    border-radius: 50%;
+    border: solid 1px;
+    border-color: black;
+}
+.big-hole {
+    width: 35px;
+    height: 35px;
+}
+.small-hole {
+    width: 20px;
+    height: 20px;
+}
+.white-hole {
+    background-color: rgba(143, 88, 16, 0.63);
+}
+.black-hole {
+    background-color: rgba(54, 32, 2, 0.63);
+}

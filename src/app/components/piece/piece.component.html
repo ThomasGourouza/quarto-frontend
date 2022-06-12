@@ -1,0 +1,22 @@
+<div *ngIf="!!piece" [ngClass]="{
+        'general': true,
+        'white': piece.color == 'WHITE',
+        'black': piece.color == 'BLACK',
+        'square': piece.shape == 'SQUARE',
+        'round': piece.shape == 'ROUND',
+        'small-square': piece.shape == 'SQUARE' && piece.size == 'SMALL',
+        'small-round': piece.shape == 'ROUND' && piece.size == 'SMALL',
+        'big-square': piece.shape == 'SQUARE' && piece.size == 'BIG',
+        'big-round': piece.shape == 'ROUND' && piece.size == 'BIG'
+    }"
+>
+    <div *ngIf="piece.top == 'HOLE'"
+        [ngClass]="{
+            'hole': true,
+            'big-hole': piece.size == 'BIG',
+            'small-hole': piece.size == 'SMALL',
+            'white-hole': piece.color == 'WHITE',
+            'black-hole': piece.color == 'BLACK'
+        }"
+    ></div>
+</div>

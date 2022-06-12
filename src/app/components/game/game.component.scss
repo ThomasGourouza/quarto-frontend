@@ -1,0 +1,49 @@
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.side {
+    float: left;
+    width: 40%;
+}
+
+.middle {
+    float: left;
+    width: 20%;
+    text-align: center;
+    margin-top: 300px;
+}
+.box {
+    width: 156px;
+    height: 110px;
+    margin: auto;
+    position: relative;
+}
+.new-game {
+    position: absolute;
+    top: 30px;
+    left: 25px;
+    border: 3px solid;
+    border-color: black;
+    cursor: pointer;
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+    background-color: rgb(218, 149, 45);
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(90, 55, 2);
+    font-size: x-large;
+}
+.new-game:hover {
+    left: 10px;
+    margin-top: -10px;
+    height: 130px;
+    width: 130px;
+    background-color: rgb(252, 170, 48);
+    font-size: xx-large;
+}
