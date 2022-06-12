@@ -1,17 +1,19 @@
 <div class="box">
-    <div class="new-game">
+    <div class="new-game" (click)="onCreateGame()">
         Quarto
     </div>
 </div>
-<div class="row">
+<div class="row" *ngIf="game.positions.length > 0">
     <div class="side">
-        <grid [squares]="[]" (selectedSquare)="onSquareClick($event)"></grid>
+        <grid [squares]="getBoard(game.positions)" (selectedSquare)="onSquareClick($event)"></grid>
     </div>
     <div class="middle">
-        <p>piece</p>
+        <p>id: {{game.id}}, name: {{game.name}}, description: {{game.description}}</p>
+        <p>player1: {{game.player1}}, player2: {{game.player2}}, date: {{game.date}}</p>
+        <p>rank: {{getCurrentRank(game.positions)}}, current player: {{getCurrentPlayer(game.positions)}}</p>
         <piece [piece]="null"></piece>
     </div>
     <div class="side">
-        <grid [squares]="[]" (selectedSquare)="onSquareClick($event)"></grid>
+        <grid [squares]="getSet(game.positions)" (selectedSquare)="onSquareClick($event)"></grid>
     </div>
 </div>
