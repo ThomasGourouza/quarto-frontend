@@ -11,7 +11,7 @@
         <p>id: {{game.id}}, name: {{game.name}}, description: {{game.description}}</p>
         <p>player1: {{game.player1}}, player2: {{game.player2}}, date: {{game.date}}</p>
         <p>rank: {{getCurrentRank(game.positions)}}, current player: {{getCurrentPlayer(game.positions)}}</p>
-        <piece [piece]="null"></piece>
+        <piece [piece]="getCurrentPiece(game.positions)"></piece>
     </div>
     <div class="side">
         <grid [squares]="getSet(game.positions)" (selectedSquare)="onSquareClick($event)"></grid>

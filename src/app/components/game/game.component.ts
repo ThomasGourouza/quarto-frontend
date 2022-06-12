@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Game } from 'src/app/models/game';
+import { Piece } from 'src/app/models/piece.model';
 import { Position } from 'src/app/models/position';
 import { Square } from 'src/app/models/square.model';
 import { GameService } from 'src/app/services/game.service';
@@ -20,7 +21,7 @@ export class GameComponent implements OnInit {
 
   onCreateGame(): void {
     this.gameService.createGame({
-      name: "partie test2",
+      name: "partie test3",
       description: "test",
       player1: "premier",
       player2: "deuxième"
@@ -40,6 +41,10 @@ export class GameComponent implements OnInit {
 
   getCurrentPlayer(positions: Position[]): string {
     return positions[positions.length - 1].currentPlayer;
+  }
+
+  getCurrentPiece(positions: Position[]): Piece | null {
+    return positions[positions.length - 1].currentPiece;
   }
 
   getBoard(positions: Position[]): Square[] {
