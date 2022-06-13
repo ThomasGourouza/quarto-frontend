@@ -4,7 +4,7 @@ import { Square } from 'src/app/models/square.model';
 @Component({
   selector: 'grid',
   templateUrl: './grid.component.html',
-  styleUrls: ['./grid.component.scss']
+  styleUrls: ['./set.component.scss']
 })
 export class GridComponent {
 

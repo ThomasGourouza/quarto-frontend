@@ -29,7 +29,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   onCreateGame(): void {
     this.gameService.createGame({
-      name: "partie test1",
+      name: "partie test2",
       description: "test",
       player1: "premier",
       player2: "deuxième"
