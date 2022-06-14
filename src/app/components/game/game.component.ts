@@ -5,6 +5,7 @@ import { Piece } from 'src/app/models/piece.model';
 import { Position } from 'src/app/models/position';
 import { PostGame } from 'src/app/models/post-game';
 import { Square } from 'src/app/models/square.model';
+import { FormService } from 'src/app/services/form.service';
 import { GameService } from 'src/app/services/game.service';
 export type GridType = 'board' | 'set';
 
@@ -21,10 +22,16 @@ export class GameComponent implements OnInit, OnDestroy {
 
   private gameSubscription = new Subscription();
 
-  constructor(private gameService: GameService) { }
+  constructor(
+    private gameService: GameService,
+    private formService: FormService
+    ) { }
 
   ngOnInit(): void {
-    this.gameSubscription = this.gameService.game$.subscribe((game) => this.game = game);
+    this.gameSubscription = this.gameService.game$.subscribe((game) => {
+      this.game = game;
+      this.formService.setDisabled(false);
+    });
   }
 
   ngOnDestroy(): void {
