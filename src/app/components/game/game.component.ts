@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { Game } from 'src/app/models/game';
 import { Piece } from 'src/app/models/piece.model';
 import { Position } from 'src/app/models/position';
+import { PostGame } from 'src/app/models/post-game';
 import { Square } from 'src/app/models/square.model';
 import { GameService } from 'src/app/services/game.service';
 export type GridType = 'board' | 'set';
@@ -30,13 +31,8 @@ export class GameComponent implements OnInit, OnDestroy {
     this.gameSubscription.unsubscribe();
   }
 
-  onCreateGame(): void {
-    this.gameService.createGame({
-      name: "partie test2",
-      description: "test",
-      player1: "premier",
-      player2: "deuxième"
-    });
+  onFormSubmit(postGame: PostGame): void {
+    this.gameService.createGame(postGame);
   }
 
   onSquareClick(square: Square | null, type: GridType): void {

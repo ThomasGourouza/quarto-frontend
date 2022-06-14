@@ -1,5 +1,5 @@
 <div class="box">
-    <div class="new-game" (click)="onCreateGame()">
+    <div class="new-game">
         Quarto
     </div>
 </div>
@@ -11,6 +11,9 @@
         <p>id: {{game.id}}, name: {{game.name}}, description: {{game.description}}</p>
         <p>player1: {{game.player1}}, player2: {{game.player2}}, date: {{game.date}}</p>
         <p>rank: {{getCurrentRank(game.positions)}}, current player: {{getCurrentPlayer(game.positions)}}</p>
+
+        <game-form (formSubmit)="onFormSubmit($event)"></game-form>
+
         <piece [piece]="getCurrentPiece(game.positions)"></piece>
     </div>
     <div class="side">

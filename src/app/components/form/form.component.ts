@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PostGame } from 'src/app/models/post-game';
 
 
 @Component({
@@ -9,6 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class FormComponent implements OnInit {
 
   public gameForm!: FormGroup;
+  @Output() formSubmit = new EventEmitter<PostGame>();
 
   constructor(
     private formBuilder: FormBuilder
@@ -24,6 +26,16 @@ export class FormComponent implements OnInit {
         // translation: [{ value: '', disabled: true }, Validators.required]
       }
     );
+    this.gameForm.controls['name'].valueChanges.subscribe((name) => {
+      // TODO: check si le nom existe
+      console.log(name);
+    });
+    this.gameForm.controls['player1'].valueChanges.subscribe((player1) => {
+      console.log(player1);
+    });
+    this.gameForm.controls['player2'].valueChanges.subscribe((player2) => {
+      console.log(player2);
+    });
   }
 
   public onSubmit(): void {
@@ -32,7 +44,7 @@ export class FormComponent implements OnInit {
     const description = formValue['description'];
     const player1 = formValue['player1'];
     const player2 = formValue['player2'];
-    console.log(name, description, player1, player2);
+    this.formSubmit.emit({ name, description, player1, player2 });
   }
 
 }
