@@ -5,7 +5,7 @@
 </div>
 <div class="row" *ngIf="game.positions.length > 0">
     <div class="side">
-        <grid [squares]="getBoard(game.positions)" (selectedSquare)="onSquareClick($event, 'board')"></grid>
+        <grid [gridType]="boardType" [squares]="getBoard(game.positions)" (selectedSquare)="onSquareClick($event, boardType)"></grid>
     </div>
     <div class="middle">
         <p>id: {{game.id}}, name: {{game.name}}, description: {{game.description}}</p>
@@ -14,6 +14,6 @@
         <piece [piece]="getCurrentPiece(game.positions)"></piece>
     </div>
     <div class="side">
-        <grid [squares]="getSet(game.positions)" (selectedSquare)="onSquareClick($event, 'set')"></grid>
+        <grid [gridType]="setType" [squares]="getSet(game.positions)" (selectedSquare)="onSquareClick($event, setType)"></grid>
     </div>
 </div>

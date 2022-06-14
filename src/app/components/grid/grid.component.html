@@ -1,8 +1,8 @@
 <div class="margin"></div>
-<div class="container parent">
-    <div class="circle child_of_container parent">
+<div [ngClass]="{ 'parent': true, 'container-board': gridType === 'board', 'container-set': gridType === 'set' }">
+    <div [ngClass]="{ 'child_of_container parent circle': true, 'circle-set': gridType === 'set' }">
         <div class="board child_of_circle">
-            <div *ngFor="let square of squares" class="square square-color" (click)="onSquareClick(square)">
+            <div *ngFor="let square of squares" [ngClass]="{ 'square': true, 'square-board square-color-board': gridType === 'board' }" (click)="onSquareClick(square)">
                 <piece
                     [piece]="square.piece"
                 ></piece>

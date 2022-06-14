@@ -5,6 +5,7 @@ import { Piece } from 'src/app/models/piece.model';
 import { Position } from 'src/app/models/position';
 import { Square } from 'src/app/models/square.model';
 import { GameService } from 'src/app/services/game.service';
+export type GridType = 'board' | 'set';
 
 @Component({
   selector: 'game',
@@ -14,6 +15,8 @@ import { GameService } from 'src/app/services/game.service';
 export class GameComponent implements OnInit, OnDestroy {
 
   game: Game = new Game();
+  boardType = 'board';
+  setType = 'set';
 
   private gameSubscription = new Subscription();
 
@@ -36,17 +39,17 @@ export class GameComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSquareClick(square: Square | null, type: 'board' | 'set'): void {
+  onSquareClick(square: Square | null, type: GridType): void {
     if (!!square && (this.playConditionForBoard(square, type) || this.playConditionForSet(square, type))) {
       this.gameService.play(this.game.id, { row: square.row, column: square.column });
     }
   }
 
-  private playConditionForBoard(square: Square, type: 'board' | 'set'): boolean {
+  private playConditionForBoard(square: Square, type: GridType): boolean {
     return type === 'board' && !!this.getLast(this.game.positions).currentPiece && !square.piece;
   }
 
-  private playConditionForSet(square: Square, type: 'board' | 'set'): boolean {
+  private playConditionForSet(square: Square, type: GridType): boolean {
     return type === 'set' && !this.getLast(this.game.positions).currentPiece && !!square.piece;
   }
 
