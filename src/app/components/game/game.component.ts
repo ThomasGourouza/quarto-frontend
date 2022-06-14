@@ -42,11 +42,11 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   private playConditionForBoard(square: Square, type: GridType): boolean {
-    return type === 'board' && !!this.getLast(this.game.positions).currentPiece && !square.piece;
+    return type === this.boardType && !!this.getLast(this.game.positions).currentPiece && !square.piece;
   }
 
   private playConditionForSet(square: Square, type: GridType): boolean {
-    return type === 'set' && !this.getLast(this.game.positions).currentPiece && !!square.piece;
+    return type === this.setType && !this.getLast(this.game.positions).currentPiece && !!square.piece;
   }
 
   getCurrentRank(positions: Position[]): number {

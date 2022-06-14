@@ -10,6 +10,7 @@ import { GameService } from './services/game.service';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { FormComponent } from './components/form/form.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormService } from './services/form.service';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   ],
   providers: [
     GameService,
+    FormService,
     HttpClient
   ],
   bootstrap: [AppComponent]

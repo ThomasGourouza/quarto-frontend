@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PostGame } from 'src/app/models/post-game';
+import { FormService } from 'src/app/services/form.service';
 
 
 @Component({
@@ -10,14 +11,16 @@ import { PostGame } from 'src/app/models/post-game';
 })
 export class FormComponent implements OnInit {
 
-  public gameForm!: FormGroup;
   @Output() formSubmit = new EventEmitter<PostGame>();
+  gameForm!: FormGroup;
+  disabled = false;
 
   constructor(
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private formService: FormService
   ) { }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.gameForm = this.formBuilder.group(
       {
         name: ['', Validators.required],
@@ -37,15 +40,19 @@ export class FormComponent implements OnInit {
     this.gameForm.controls['player2'].valueChanges.subscribe((player2) => {
       console.log(player2);
     });
+    this.formService.disabled$.subscribe((value) => this.disabled = value);
   }
 
-  public onSubmit(): void {
-    const formValue = this.gameForm.value;
-    const name = formValue['name'];
-    const description = formValue['description'];
-    const player1 = formValue['player1'];
-    const player2 = formValue['player2'];
-    this.formSubmit.emit({ name, description, player1, player2 });
+  onSubmit(): void {
+    if (!this.disabled) {
+      this.formService.setDisabled(true);
+      const formValue = this.gameForm.value;
+      const name = formValue['name'];
+      const description = formValue['description'];
+      const player1 = formValue['player1'];
+      const player2 = formValue['player2'];
+      this.formSubmit.emit({ name, description, player1, player2 });
+    }
   }
 
 }
