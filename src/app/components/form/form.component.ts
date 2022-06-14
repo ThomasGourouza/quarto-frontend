@@ -5,7 +5,8 @@ import { PostGame } from 'src/app/models/post-game';
 
 @Component({
   selector: 'game-form',
-  templateUrl: './form.component.html'
+  templateUrl: './form.component.html',
+  styleUrls: ['./form.component.scss']
 })
 export class FormComponent implements OnInit {
 
