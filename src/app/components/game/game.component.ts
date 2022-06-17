@@ -19,6 +19,7 @@ export class GameComponent implements OnInit, OnDestroy {
   game: Game = new Game();
   boardType = 'board';
   setType = 'set';
+  winnerPlayer = '';
 
   private gameSubscription = new Subscription();
 
@@ -30,6 +31,9 @@ export class GameComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.gameSubscription = this.gameService.game$.subscribe((game) => {
       this.game = game;
+      if (this.game.over) {
+        this.winnerPlayer = this.getLast(this.game.positions).currentPlayer;
+      }
       this.formService.setDisabled(false);
     });
   }
@@ -43,7 +47,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   onSquareClick(square: Square | null, type: GridType): void {
-    if (!!square && (this.playConditionForBoard(square, type) || this.playConditionForSet(square, type))) {
+    if (!this.game.over && !!square && (this.playConditionForBoard(square, type) || this.playConditionForSet(square, type))) {
       this.gameService.play(this.game.id, { row: square.row, column: square.column });
     }
   }

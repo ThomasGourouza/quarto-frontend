@@ -8,6 +8,7 @@ export class Game {
 	public player2: string = '';
 	public date: Date = new Date();
 	public positions: Position[] = [];
+	public over = false;
 
     constructor() { }
 
