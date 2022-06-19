@@ -30,12 +30,25 @@ export class GameComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.gameSubscription = this.gameService.game$.subscribe((game) => {
-      console.log(game);
-      
-      this.game = game;
+      if (!!game.positions && !!this.game.positions &&
+          (this.getLast(game.positions)?.rank - this.getLast(this.game.positions)?.rank === 2)) {
+        this.game.positions.push(this.getBeforeLast(game.positions));
+        setTimeout(() => {
+          this.game = game;
+        }, 1000);
+      } else {
+        this.game = game;
+      }
       if (this.game.over) {
         const winner = this.game.players.find((player) => player.winner)?.name;
         this.gameOverMessage = !!winner ? `Congratulation ${winner}, you won!` : 'This is a draw!';
+      } else {
+        const lastPosition = this.getLast(this.game.positions);
+        if (!!lastPosition && lastPosition.currentPlayerId == 2 && !!lastPosition.currentPiece) {
+          setTimeout(() => {
+            this.onAiPlay();
+          }, 1000);
+        }
       }
       this.formService.setDisabled(false);
     });
@@ -91,5 +104,9 @@ export class GameComponent implements OnInit, OnDestroy {
 
   private getLast(positions: Position[]): Position {
     return positions[positions.length - 1];
+  }
+
+  private getBeforeLast(positions: Position[]): Position {
+    return positions[positions.length - 2];
   }
 }
