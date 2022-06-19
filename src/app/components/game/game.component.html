@@ -7,10 +7,10 @@
     </div>
     <div class="middle">
         <p>id: {{game.id}}, name: {{game.name}}, description: {{game.description}}</p>
-        <p>player1: {{game.player1}}, player2: {{game.player2}}, date: {{game.date}}</p>
+        <p>date: {{game.date}}</p>
         <p>rank: {{getCurrentRank(game.positions)}}, current player: {{getCurrentPlayer(game.positions)}}</p>
         <piece [piece]="getCurrentPiece(game.positions)"></piece>
-        <div *ngIf="game.over">Congratulation {{winnerPlayer}}, you won!</div>
+        <div *ngIf="game.over">{{gameOverMessage}}</div>
     </div>
     <div class="side">
         <grid [gridType]="setType" [squares]="getSet(game.positions)" (selectedSquare)="onSquareClick($event, setType)"></grid>

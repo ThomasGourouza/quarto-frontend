@@ -19,20 +19,21 @@ export class GameComponent implements OnInit, OnDestroy {
   game: Game = new Game();
   boardType = 'board';
   setType = 'set';
-  winnerPlayer = '';
+  gameOverMessage = '';
 
   private gameSubscription = new Subscription();
 
   constructor(
     private gameService: GameService,
     private formService: FormService
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     this.gameSubscription = this.gameService.game$.subscribe((game) => {
       this.game = game;
       if (this.game.over) {
-        this.winnerPlayer = this.getLast(this.game.positions).currentPlayer;
+        const winner = this.game.players.find((player) => player.winner)?.name;
+        this.gameOverMessage = !!winner ? `Congratulation ${winner}, you won!` : 'This is a draw!';
       }
       this.formService.setDisabled(false);
     });
@@ -65,7 +66,9 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   getCurrentPlayer(positions: Position[]): string {
-    return this.getLast(positions).currentPlayer;
+    return this.game.players.find((player) =>
+      player.id == this.getLast(positions).currentPlayerId
+    )?.name as string;
   }
 
   getCurrentPiece(positions: Position[]): Piece | null {

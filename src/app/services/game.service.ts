@@ -53,7 +53,6 @@ export class GameService {
 
   private subscribeGame(observable: Observable<Game>): void {
     observable.subscribe((game) => {
-      console.log(game);
       if (!!game) {
         this.game$.next(game);
       }
@@ -62,7 +61,6 @@ export class GameService {
 
   private subscribeGames(observable: Observable<Game[]>): void {
     observable.subscribe((games) => {
-      console.log(games);
       if (!!games) {
         this.games$.next(games);
       }
