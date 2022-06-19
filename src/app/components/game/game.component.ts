@@ -30,6 +30,8 @@ export class GameComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.gameSubscription = this.gameService.game$.subscribe((game) => {
+      console.log(game);
+      
       this.game = game;
       if (this.game.over) {
         const winner = this.game.players.find((player) => player.winner)?.name;
@@ -51,6 +53,10 @@ export class GameComponent implements OnInit, OnDestroy {
     if (!this.game.over && !!square && (this.playConditionForBoard(square, type) || this.playConditionForSet(square, type))) {
       this.gameService.play(this.game.id, { row: square.row, column: square.column });
     }
+  }
+
+  onAiPlay(): void {
+    this.gameService.aiPlay(this.game.id);
   }
 
   private playConditionForBoard(square: Square, type: GridType): boolean {

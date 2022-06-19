@@ -51,6 +51,10 @@ export class GameService {
     this.subscribeGame(this.http.patch<Game>(`${GAME_URL}${id}/play`, move));
   }
 
+  public aiPlay(id: string): void {
+    this.subscribeGame(this.http.patch<Game>(`${GAME_URL}${id}/play/ai`, null));
+  }
+
   private subscribeGame(observable: Observable<Game>): void {
     observable.subscribe((game) => {
       if (!!game) {
