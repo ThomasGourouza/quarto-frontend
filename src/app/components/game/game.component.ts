@@ -31,39 +31,25 @@ export class GameComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.gameSubscription = this.gameService.game$.subscribe((game) => {
-      if (game.id !== '') {
-        this.game = game;
-        if (this.game.over) {
-          const winner = this.game.players.find((player) => player.winner)?.name;
-          this.gameOverMessage = !!winner ? `Congratulation ${winner}, you won!` : 'This is a draw!';
-        } else {
-          // if (this.game.positions.length === 1) {
-          //   // first move
-          //   this.gameService.aiPlay(this.game.id);
-  
-          // } else {
-            const lastPosition = this.getLast(this.game.positions);
-            // human vs AI
-            if (!!lastPosition && lastPosition.currentPlayerId == 2 && !!lastPosition.currentPiece) {
-              this.gameService.aiPlay(this.game.id);
-            }
-  
-            // AI auto play
-            // if (!!lastPosition && !!lastPosition.currentPiece) {
-            //   this.gameService.aiPlay(this.game.id);
-            // }
-          // }
+      this.game = game;
+      if (this.game.over) {
+        const winner = this.game.players.find((player) => player.winner)?.name;
+        this.gameOverMessage = !!winner ? `Congratulation ${winner}, you won!` : 'This is a draw!';
+      } else {
+        const lastPosition = this.getLast(this.game.positions);
+        if (!!lastPosition && lastPosition.currentPlayerId == 2 && !!lastPosition.currentPiece && game.id !== '') {
+          this.gameService.aiPlay(this.game.id);
         }
-        this.formService.setDisabled(false);
       }
+      this.formService.setDisabled(false);
     });
     this.moveSubscription = this.gameService.moves$.subscribe((moves) => {
       if (this.game.id !== '') {
-        moves.forEach((move) => {
+        for (let i = 0; i < moves.length; i++) {
           setTimeout(() => {
-            this.gameService.play(this.game.id, move);
-          }, 1000);
-        });
+            this.gameService.play(this.game.id, moves[i]);
+          }, i === 0 ? 500 : 1500);
+        }
       }
     });
   }
@@ -78,7 +64,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   onSquareClick(square: Square | null, type: GridType): void {
-    if (!this.game.over && !!square && (this.playConditionForBoard(square, type) || this.playConditionForSet(square, type))) {
+    if (!this.game.over && !!square && (this.playConditionForBoard(square, type) || this.playConditionForSet(square, type)) && this.getLast(this.game.positions).currentPlayerId === 1) {
       this.gameService.play(this.game.id, { row: square.row, column: square.column });
     }
   }
@@ -117,7 +103,4 @@ export class GameComponent implements OnInit, OnDestroy {
     return positions[positions.length - 1];
   }
 
-  private getBeforeLast(positions: Position[]): Position {
-    return positions[positions.length - 2];
-  }
 }
