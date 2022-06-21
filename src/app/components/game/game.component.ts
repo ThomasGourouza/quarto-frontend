@@ -22,6 +22,7 @@ export class GameComponent implements OnInit, OnDestroy {
   gameOverMessage = '';
 
   private gameSubscription = new Subscription();
+  private moveSubscription = new Subscription();
 
   constructor(
     private gameService: GameService,
@@ -30,32 +31,46 @@ export class GameComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.gameSubscription = this.gameService.game$.subscribe((game) => {
-      if (!!game.positions && !!this.game.positions &&
-          (this.getLast(game.positions)?.rank - this.getLast(this.game.positions)?.rank === 2)) {
-        this.game.positions.push(this.getBeforeLast(game.positions));
-        setTimeout(() => {
-          this.game = game;
-        }, 1000);
-      } else {
+      if (game.id !== '') {
         this.game = game;
-      }
-      if (this.game.over) {
-        const winner = this.game.players.find((player) => player.winner)?.name;
-        this.gameOverMessage = !!winner ? `Congratulation ${winner}, you won!` : 'This is a draw!';
-      } else {
-        const lastPosition = this.getLast(this.game.positions);
-        if (!!lastPosition && lastPosition.currentPlayerId == 2 && !!lastPosition.currentPiece) {
-          setTimeout(() => {
-            this.onAiPlay();
-          }, 1000);
+        if (this.game.over) {
+          const winner = this.game.players.find((player) => player.winner)?.name;
+          this.gameOverMessage = !!winner ? `Congratulation ${winner}, you won!` : 'This is a draw!';
+        } else {
+          // if (this.game.positions.length === 1) {
+          //   // first move
+          //   this.gameService.aiPlay(this.game.id);
+  
+          // } else {
+            const lastPosition = this.getLast(this.game.positions);
+            // human vs AI
+            if (!!lastPosition && lastPosition.currentPlayerId == 2 && !!lastPosition.currentPiece) {
+              this.gameService.aiPlay(this.game.id);
+            }
+  
+            // AI auto play
+            // if (!!lastPosition && !!lastPosition.currentPiece) {
+            //   this.gameService.aiPlay(this.game.id);
+            // }
+          // }
         }
+        this.formService.setDisabled(false);
       }
-      this.formService.setDisabled(false);
+    });
+    this.moveSubscription = this.gameService.moves$.subscribe((moves) => {
+      if (this.game.id !== '') {
+        moves.forEach((move) => {
+          setTimeout(() => {
+            this.gameService.play(this.game.id, move);
+          }, 1000);
+        });
+      }
     });
   }
 
   ngOnDestroy(): void {
     this.gameSubscription.unsubscribe();
+    this.moveSubscription.unsubscribe();
   }
 
   onFormSubmit(postGame: PostGame): void {
@@ -66,10 +81,6 @@ export class GameComponent implements OnInit, OnDestroy {
     if (!this.game.over && !!square && (this.playConditionForBoard(square, type) || this.playConditionForSet(square, type))) {
       this.gameService.play(this.game.id, { row: square.row, column: square.column });
     }
-  }
-
-  onAiPlay(): void {
-    this.gameService.aiPlay(this.game.id);
   }
 
   private playConditionForBoard(square: Square, type: GridType): boolean {

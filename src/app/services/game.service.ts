@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Game } from '../models/game';
 import { PostGame } from '../models/post-game';
+import { PostMove } from '../models/post-move';
 
 const GAME_URL = 'http://localhost:8080/games/';
 
@@ -13,6 +14,7 @@ export class GameService {
 
   game$: BehaviorSubject<Game> = new BehaviorSubject(new Game());
   games$: BehaviorSubject<Game[]> = new BehaviorSubject([new Game()]);
+  moves$: BehaviorSubject<PostMove[]> = new BehaviorSubject([{ row: 0, column: 0}]);
 
   constructor(
     private http: HttpClient
@@ -23,7 +25,7 @@ export class GameService {
   }
 
   public getGames(): void {
-    this.subscribeGames(this.http.get<Array<Game>>(GAME_URL));
+    this.subscribeGames(this.http.get<Game[]>(GAME_URL));
   }
 
   public getGameById(id: string): void {
@@ -31,7 +33,7 @@ export class GameService {
   }
 
   public getGameByName(param: { name: string }): void {
-    this.subscribeGames(this.http.get<Array<Game>>(`${GAME_URL}search`, {
+    this.subscribeGames(this.http.get<Game[]>(`${GAME_URL}search`, {
       observe: 'body',
       params: this.asHttpParam(param)
     }));
@@ -47,12 +49,20 @@ export class GameService {
     }).unsubscribe();
   }
 
-  public play(id: string, move: { row: number, column: number }): void {
+  public play(id: string, move: PostMove): void {
     this.subscribeGame(this.http.patch<Game>(`${GAME_URL}${id}/play`, move));
   }
 
   public aiPlay(id: string): void {
-    this.subscribeGame(this.http.patch<Game>(`${GAME_URL}${id}/play/ai`, null));
+    this.subscribeMoves(this.http.get<PostMove[]>(`${GAME_URL}${id}/moves`));
+  }
+
+  private subscribeMoves(observable: Observable<PostMove[]>): void {
+    observable.subscribe((moves) => {
+      if (!!moves && moves[0].row + moves[0].column > 1) {
+        this.moves$.next(moves);
+      }
+    });
   }
 
   private subscribeGame(observable: Observable<Game>): void {
