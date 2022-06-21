@@ -20,6 +20,7 @@ export class GameComponent implements OnInit, OnDestroy {
   boardType = 'board';
   setType = 'set';
   gameOverMessage = '';
+  aiVsAiMode = true;
 
   private gameSubscription = new Subscription();
   private moveSubscription = new Subscription();
@@ -32,12 +33,17 @@ export class GameComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.gameSubscription = this.gameService.game$.subscribe((game) => {
       this.game = game;
+      console.log(game);
       if (this.game.over) {
         const winner = this.game.players.find((player) => player.winner)?.name;
         this.gameOverMessage = !!winner ? `Congratulation ${winner}, you won!` : 'This is a draw!';
       } else {
         const lastPosition = this.getLast(this.game.positions);
-        if (!!lastPosition && lastPosition.currentPlayerId == 2 && !!lastPosition.currentPiece && game.id !== '') {
+        const isGameReady = game.id !== '' && !!lastPosition;
+        const isFirstAiMove = this.aiVsAiMode && lastPosition.rank === 0;
+        const isPiecePresent = !!lastPosition.currentPiece;
+        const isSecondPlayerToPlay = lastPosition.currentPlayerId == 2;
+        if (isGameReady && (isFirstAiMove || (isPiecePresent && (this.aiVsAiMode || isSecondPlayerToPlay)))) {
           this.gameService.aiPlay(this.game.id);
         }
       }
