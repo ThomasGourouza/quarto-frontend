@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Game } from 'src/app/models/game';
 import { Piece } from 'src/app/models/piece.model';
 import { Position } from 'src/app/models/position';
@@ -22,8 +22,7 @@ export class GameComponent implements OnInit, OnDestroy {
   gameOverMessage = '';
   aiVsAiMode = true;
 
-  private gameSubscription = new Subscription();
-  private moveSubscription = new Subscription();
+  private _destroyed$ = new Subject<boolean>();
 
   constructor(
     private gameService: GameService,
@@ -31,24 +30,24 @@ export class GameComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.gameSubscription = this.gameService.game$.subscribe((game) => {
+    this.gameService.game$.pipe(takeUntil(this._destroyed$)).subscribe((game) => {
       this.game = game;
       if (this.game.over) {
         const winner = this.game.players.find((player) => player.winner)?.name;
         this.gameOverMessage = !!winner ? `Congratulation ${winner}, you won!` : 'This is a draw!';
       } else {
-        const lastPosition = this.getLast(this.game.positions);
-        const isGameReady = game.id !== '' && !!lastPosition;
-        const isFirstAiMove = this.aiVsAiMode && lastPosition?.rank === 0;
-        const isPiecePresent = !!lastPosition?.currentPiece;
-        const isSecondPlayerToPlay = lastPosition?.currentPlayerId == 2;
-        if (isGameReady && (isFirstAiMove || (isPiecePresent && (this.aiVsAiMode || isSecondPlayerToPlay)))) {
-          this.gameService.aiPlay(this.game.id);
-        }
+        // const lastPosition = this.getLast(this.game.positions);
+        // const isGameReady = game.id !== '' && !!lastPosition;
+        // const isFirstAiMove = this.aiVsAiMode && lastPosition?.rank === 0;
+        // const isPiecePresent = !!lastPosition?.currentPiece;
+        // const isSecondPlayerToPlay = lastPosition?.currentPlayerId == 2;
+        // if (isGameReady && (isFirstAiMove || (isPiecePresent && (this.aiVsAiMode || isSecondPlayerToPlay)))) {
+        //   this.gameService.aiPlay(this.game.id);
+        // }
       }
       this.formService.setDisabled(false);
     });
-    this.moveSubscription = this.gameService.moves$.subscribe((moves) => {
+    this.gameService.moves$.pipe(takeUntil(this._destroyed$)).subscribe((moves) => {
       if (this.game.id !== '') {
         for (let i = 0; i < moves.length; i++) {
           setTimeout(() => {
@@ -60,8 +59,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.gameSubscription.unsubscribe();
-    this.moveSubscription.unsubscribe();
+    this._destroyed$.next(true);
   }
 
   onFormSubmit(postGame: PostGame): void {
@@ -69,7 +67,12 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   onSquareClick(square: Square | null, type: GridType): void {
-    if (!this.game.over && !!square && (this.playConditionForBoard(square, type) || this.playConditionForSet(square, type)) && this.getLast(this.game.positions).currentPlayerId === 1) {
+    if (
+      !this.game.over
+      && !!square
+      && (this.playConditionForBoard(square, type) || this.playConditionForSet(square, type))
+      // && this.getLast(this.game.positions).currentPlayerId === 1
+    ) {
       this.gameService.play(this.game.id, { row: square.row, column: square.column });
     }
   }
